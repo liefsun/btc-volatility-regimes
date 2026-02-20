@@ -1,0 +1,14 @@
+numpy
+scipy
+pandas
+matplotlib
+seaborn
+arch>=7.0
+statsmodels
+scikit-learn
+yfinance
+fredapi
+pytrends
+requests
+python-dotenv
+jupyter
