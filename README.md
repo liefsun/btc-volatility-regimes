@@ -14,7 +14,8 @@ btc-garch/
 │   ├── 01_data_pipeline.ipynb    # Data acquisition & preprocessing
 │   ├── 02_egarch_analysis.ipynb  # GARCH/GJR/EGARCH with exogenous vars
 │   ├── 03_ms_garch.ipynb         # Markov-Switching volatility (2 & 3 regimes)
-│   └── 04_ml_regimes.ipynb       # ML regime classification (TODO)
+│   ├── 04_oos_evaluation.ipynb   # Out-of-sample forecast evaluation
+│   └── 05_ml_regimes.ipynb       # HMM + RF/XGBoost regime classification
 ├── src/
 │   └── data_loader.py            # Data loading utilities
 ├── data/                         # Downloaded data (gitignored)
@@ -33,7 +34,9 @@ btc-garch/
 | EGARCH + Exogenous | Done | Gold, VIX, volume, tx count, CPI in mean eq |
 | MS (2-regime) | Done | Markov-switching mean + variance, calm vs turbulent |
 | MS (3-regime) | Done | Calm / Normal / Crisis granularity |
-| ML Regime Classification | TODO | RF/XGBoost vs HMM comparison |
+| OOS Forecast Evaluation | Done | Expanding window backtest: GARCH vs EGARCH vs MS |
+| Gaussian HMM | Done | 2-regime HMM, comparison with Markov-Switching |
+| RF / XGBoost | Done | Supervised regime classification with feature importance |
 
 ## Key Findings
 
@@ -50,6 +53,17 @@ btc-garch/
 - **3-regime preferred** (lower AIC): Calm (27%) / Normal (81%) / Crisis (203% annualized vol)
 - **Turbulent episodes align with known events**: COVID crash, China mining ban, FTX collapse
 
+### Out-of-Sample Forecast
+- **GARCH(1,1) wins** on MAE and QLIKE — simpler model forecasts better OOS
+- **DM test**: GARCH vs MS significantly different (p=0.048); EGARCH vs MS not significant
+- All models have low Mincer-Zarnowitz R² — typical for daily vol forecasting
+
+### ML Regime Classification
+- **HMM vs Markov-Switching**: 94.8% agreement (Cohen's kappa = 0.88), substantial concordance
+- **XGBoost best for turbulent detection**: F1 = 0.61 (precision 60%, recall 62%)
+- **Top features**: rolling volatility (5d, 21d), lagged returns, VIX changes
+- **1-day-ahead prediction degrades significantly**: F1 drops from 0.61 to 0.33 — regimes are easier to classify than predict
+
 ## Data
 
 Daily observations from 2015-01-05 to present. Sources:
@@ -60,7 +74,7 @@ Daily observations from 2015-01-05 to present. Sources:
 
 ## Tech Stack
 
-Python, NumPy, SciPy, pandas, matplotlib, arch, statsmodels, scikit-learn
+Python, NumPy, SciPy, pandas, matplotlib, arch, statsmodels, scikit-learn, hmmlearn, XGBoost
 
 ## Setup
 

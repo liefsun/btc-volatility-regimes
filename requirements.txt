@@ -6,6 +6,8 @@ seaborn
 arch>=7.0
 statsmodels
 scikit-learn
+hmmlearn>=0.3
+xgboost>=2.0
 yfinance
 fredapi
 pytrends
