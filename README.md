@@ -15,7 +15,8 @@ btc-garch/
 │   ├── 02_egarch_analysis.ipynb  # GARCH/GJR/EGARCH with exogenous vars
 │   ├── 03_ms_garch.ipynb         # Markov-Switching volatility (2 & 3 regimes)
 │   ├── 04_oos_evaluation.ipynb   # Out-of-sample forecast evaluation
-│   └── 05_ml_regimes.ipynb       # HMM + RF/XGBoost regime classification
+│   ├── 05_ml_regimes.ipynb       # HMM + RF/XGBoost regime classification
+│   └── 06_trading_backtest.ipynb # Regime-based trading strategy backtest
 ├── src/
 │   └── data_loader.py            # Data loading utilities
 ├── data/                         # Downloaded data (gitignored)
@@ -37,6 +38,7 @@ btc-garch/
 | OOS Forecast Evaluation | Done | Expanding window backtest: GARCH vs EGARCH vs MS |
 | Gaussian HMM | Done | 2-regime HMM, comparison with Markov-Switching |
 | RF / XGBoost | Done | Supervised regime classification with feature importance |
+| Trading Backtest | Done | Regime-based signal → position sizing → PnL evaluation |
 
 ## Key Findings
 
@@ -63,6 +65,12 @@ btc-garch/
 - **XGBoost best for turbulent detection**: F1 = 0.61 (precision 60%, recall 62%)
 - **Top features**: rolling volatility (5d, 21d), lagged returns, VIX changes
 - **1-day-ahead prediction degrades significantly**: F1 drops from 0.61 to 0.33 — regimes are easier to classify than predict
+
+### Trading Strategy Backtest
+- **Scaled strategy** (weight = 1 - P(turbulent)) achieves **Sharpe 1.26** vs Buy-and-Hold 0.95
+- **Max drawdown halved**: -42% vs -83% for buy-and-hold
+- **Breakeven transaction cost**: ~0.26% per trade for Scaled strategy
+- **Best during crises**: COVID Sharpe 2.29 (vs 1.80 buy-and-hold), Crypto Winter -0.97 (vs -1.60)
 
 ## Data
 
